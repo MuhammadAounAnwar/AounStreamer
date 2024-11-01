@@ -23,10 +23,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -112,6 +114,21 @@ fun MainScreen(onItemSelected: (String) -> Unit) {
                             else -> {}
                         }
                     }
+
+                    // Trigger pagination when end of LazyRow is reached
+                    LaunchedEffect(lazyListState) {
+                        snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo }
+                            .collect { visibleItems ->
+                                val lastVisibleItem = visibleItems.lastOrNull()
+                                if (lastVisibleItem != null &&
+                                    lastVisibleItem.index == items.size - 1 &&
+                                    mediaItems.loadState.append is LoadState.NotLoading
+                                ) {
+                                    mediaItems.retry() // Trigger loading the next page
+                                }
+                            }
+                    }
+
                 }
             }
 
