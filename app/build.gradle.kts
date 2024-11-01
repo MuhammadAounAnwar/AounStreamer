@@ -60,6 +60,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.runtime)
+    implementation(libs.androidx.cardview)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.lifecycle.livedata.core.ktx)
+    implementation(libs.androidx.lifecycle.livedata.core.ktx)
 
 
 

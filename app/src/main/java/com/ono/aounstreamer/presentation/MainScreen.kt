@@ -1,7 +1,5 @@
-package com.ono.aounstreamer
+package com.ono.aounstreamer.presentation
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,16 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
+import com.ono.aounstreamer.util.ErrorMessage
+import com.ono.aounstreamer.util.LoadingNextPageItem
+import com.ono.aounstreamer.MainViewModel
+import com.ono.aounstreamer.util.PageLoader
 import com.ono.streamerlibrary.domain.model.MediaItem
 import java.util.Locale
 
@@ -70,36 +67,32 @@ fun MainScreen(onItemSelected: (String) -> Unit) {
         SearchBar(onSearch = { query = it; viewModel.search(query) })
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            // Grouping items by media type
+            // Group media items dynamically by media type
             val groupedMedia = mediaItems.itemSnapshotList.items
                 .groupBy { it.mediaType }
-                .map { (mediaType, items) -> mediaType to items }
-                .sortedBy { (mediaType, _) -> mediaType }
+//                .toSortedMap() // Sorting media types alphabetically
 
             groupedMedia.forEach { (mediaType, items) ->
                 item {
-                    MediaTypeHeader(mediaType.toString())
+                    MediaTypeHeader(mediaType.toString()) // Display media type header
                 }
-                // LazyRow for each media type
                 item {
                     val lazyListState = rememberLazyListState()
                     LazyRow(
                         state = lazyListState,
                         contentPadding = PaddingValues(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         items(items) { mediaItem ->
                             MediaCard(item = mediaItem, onItemSelected = onItemSelected)
                         }
 
-                        // Handle loading state for the carousel
+                        // Handle loading state for each carousel
                         when (mediaItems.loadState.append) {
                             is LoadState.Loading -> {
                                 item { LoadingNextPageItem(modifier = Modifier.fillParentMaxSize()) }
                             }
-
                             is LoadState.Error -> {
                                 val error = mediaItems.loadState.append as LoadState.Error
                                 item {
@@ -111,11 +104,11 @@ fun MainScreen(onItemSelected: (String) -> Unit) {
                                 }
                             }
 
-                            else -> {}
+                            is LoadState.NotLoading -> {}
                         }
                     }
 
-                    // Trigger pagination when end of LazyRow is reached
+                    // Trigger pagination for this LazyRow when reaching its end
                     LaunchedEffect(lazyListState) {
                         snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo }
                             .collect { visibleItems ->
@@ -124,11 +117,10 @@ fun MainScreen(onItemSelected: (String) -> Unit) {
                                     lastVisibleItem.index == items.size - 1 &&
                                     mediaItems.loadState.append is LoadState.NotLoading
                                 ) {
-                                    mediaItems.retry() // Trigger loading the next page
+                                    mediaItems.retry() // Load the next page for the current media type
                                 }
                             }
                     }
-
                 }
             }
 
@@ -136,21 +128,7 @@ fun MainScreen(onItemSelected: (String) -> Unit) {
             if (mediaItems.loadState.refresh is LoadState.Loading) {
                 item { PageLoader(modifier = Modifier.fillParentMaxSize()) }
             }
-
-            if (mediaItems.loadState.refresh is LoadState.Error) {
-                val error = mediaItems.loadState.refresh as LoadState.Error
-                item {
-                    ErrorMessage(
-                        modifier = Modifier.fillParentMaxSize(),
-                        message = error.error.localizedMessage ?: "Unknown error",
-                        onClickRetry = { mediaItems.retry() }
-                    )
-                }
-            }
-
         }
-
-
     }
 }
 

@@ -1,14 +1,15 @@
-package com.ono.aounstreamer
+package com.ono.aounstreamer.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ono.aounstreamer.presentation.DetailScreen
+import com.ono.aounstreamer.presentation.MainScreen
+import com.ono.aounstreamer.presentation.PlayerScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier) {

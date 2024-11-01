@@ -1,4 +1,4 @@
-package com.ono.aounstreamer
+package com.ono.aounstreamer.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

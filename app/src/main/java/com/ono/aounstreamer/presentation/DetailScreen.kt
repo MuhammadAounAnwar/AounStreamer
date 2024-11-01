@@ -1,4 +1,4 @@
-package com.ono.aounstreamer
+package com.ono.aounstreamer.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
