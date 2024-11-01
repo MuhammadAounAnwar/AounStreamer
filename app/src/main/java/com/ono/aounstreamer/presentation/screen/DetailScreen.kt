@@ -37,25 +37,25 @@ fun DetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp) // Added padding for better spacing
+                .padding(16.dp)
         ) {
-            // Use Box to handle image scaling better
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp) // Fixed height for better control
+                    .height(200.dp)
             ) {
                 AsyncImage(
                     model = "https://image.tmdb.org/t/p/w500${mediaItem.posterPath}",
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize() // Fill the Box for better fit
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Title
+
             Text(
                 text = if (mediaItem.mediaType == "tv") mediaItem.name else mediaItem.title,
                 style = MaterialTheme.typography.headlineMedium
@@ -63,7 +63,7 @@ fun DetailScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Overview with scroll capability
+
             val scrollState = rememberScrollState()
             Text(
                 modifier = Modifier
@@ -73,7 +73,7 @@ fun DetailScreen(
                 style = MaterialTheme.typography.bodySmall
             )
 
-            // Action buttons
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
