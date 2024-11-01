@@ -37,8 +37,6 @@ class MediaPagingSource(
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
-
-//        return state.anchorPosition
     }
 }
 

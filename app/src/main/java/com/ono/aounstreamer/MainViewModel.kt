@@ -23,7 +23,7 @@ class MainViewModel @Inject constructor(
     private val searchMediaUseCase: GetMediaItemsUseCase
 ) : ViewModel() {
     var selectedItem: MediaItem? = null
-    private val _query = MutableStateFlow("")
+    val _query = MutableStateFlow("")
     val mediaItems: StateFlow<PagingData<MediaItem>> =
         _query.debounce(2000).flatMapLatest { query ->
             searchMediaUseCase(query)

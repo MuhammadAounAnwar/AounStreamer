@@ -81,6 +81,7 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.core.testing)
 
 
     // Hilt

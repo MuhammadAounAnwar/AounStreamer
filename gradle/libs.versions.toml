@@ -1,6 +1,7 @@
 [versions]
 agp = "8.7.1"
 converterGson = "2.11.0"
+coreTesting = "2.2.0"
 exoplayer = "2.19.1"
 foundation = "1.7.5"
 junitJupiterApi = "5.8.2"
@@ -46,6 +47,7 @@ turbine = "0.8.0"
 [libraries]
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
