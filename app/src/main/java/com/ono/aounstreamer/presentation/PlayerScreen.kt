@@ -1,8 +1,13 @@
 package com.ono.aounstreamer.presentation
 
+import android.content.pm.ActivityInfo
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
@@ -12,6 +17,12 @@ import androidx.media3.ui.PlayerView
 @Composable
 fun PlayerScreen() {
     val context = LocalContext.current
+    val activity = context as? ComponentActivity
+
+    LaunchedEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
     val exoPlayer = remember {
         ExoPlayer.Builder(context)
             .build()
@@ -24,14 +35,19 @@ fun PlayerScreen() {
             }
     }
 
-    DisposableEffect(
-        AndroidView(factory = {
+    AndroidView(
+        factory = {
             PlayerView(context).apply {
                 player = exoPlayer
             }
-        })
-    ) {
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+
+
+    DisposableEffect(Unit) {
         onDispose {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             exoPlayer.release()
         }
     }
