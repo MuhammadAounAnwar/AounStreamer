@@ -1,5 +1,6 @@
 package com.ono.aounstreamer.util
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,32 +17,40 @@ import com.ono.streamerlibrary.domain.model.MediaItem
 import com.ono.streamerlibrary.domain.model.toJsonObject
 import com.ono.streamerlibrary.domain.model.toMediaItem
 
+sealed class Screen(val route: String) {
+    object Main : Screen("main")
+    object Detail : Screen("detail_screen")
+    data class Player(val itemUrl: String) : Screen("player/$itemUrl")
+}
+
 @Composable
 fun AppNavigation(
     viewModel: MainViewModel = hiltViewModel(),
     navController: NavHostController,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
 
+    val TAG = "AppNavigation"
 
-    NavHost(navController, startDestination = "main", modifier = modifier) {
-        composable("main") {
+    NavHost(navController, startDestination = Screen.Main.route, modifier = modifier) {
+        composable(Screen.Main.route) {
             MainScreen(viewModel) { item ->
                 viewModel.selectedItem = item
-                navController.navigate("detail_screen")
+                navigateToDetailScreen(navController)
             }
         }
 
-        composable("detail_screen") {
+        composable(Screen.Detail.route) {
             viewModel.selectedItem?.let {
-                DetailScreen(viewModel = viewModel) { itemUrl ->
-                    navController.navigate("player/$itemUrl")
+                DetailScreen(viewModel) { itemUrl ->
+                    Log.d(TAG, "AppNavigation: $itemUrl")
+                    navigateToPlayerScreen(navController, itemUrl)
                 }
             }
         }
 
         composable(
-            route = "player/{itemUrl}",
+            route = Screen.Player("{itemUrl}").route,
             arguments = listOf(navArgument("itemUrl") { type = NavType.StringType })
         ) { backStackEntry ->
             val itemUrl = backStackEntry.arguments?.getString("itemUrl")
@@ -51,3 +60,12 @@ fun AppNavigation(
         }
     }
 }
+
+private fun navigateToDetailScreen(navController: NavHostController) {
+    navController.navigate(Screen.Detail.route)
+}
+
+private fun navigateToPlayerScreen(navController: NavHostController, itemUrl: String) {
+    navController.navigate(Screen.Player(itemUrl).route)
+}
+

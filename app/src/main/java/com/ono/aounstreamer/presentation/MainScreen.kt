@@ -179,7 +179,7 @@ fun MediaCard(item: MediaItem, onItemSelected: (MediaItem) -> Unit) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = item.title ?: "Untitled",
+                text = if (item.mediaType == "tv") item.name else item.title,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

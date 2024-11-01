@@ -36,7 +36,7 @@ fun DetailScreen(
                 contentScale = ContentScale.Crop
             )
             Text(
-                text = mediaItem.title ?: "Unknown",
+                text = if (mediaItem.mediaType == "tv") mediaItem.name else mediaItem.title,
                 style = MaterialTheme.typography.headlineMedium
             )
 
