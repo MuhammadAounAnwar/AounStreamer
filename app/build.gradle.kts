@@ -41,6 +41,15 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packagingOptions {
+        resources {
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/NOTICE" // You can add other entries if similar errors occur
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
@@ -76,12 +85,17 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
 
     testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.mockk.android)
     androidTestImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(libs.junit.jupiter.engine)
+/*    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)*/
     testImplementation(libs.turbine)
     testImplementation(libs.androidx.core.testing)
+    androidTestImplementation (libs.androidx.runner)
+    /*androidTestImplementation("io.mockk:mockk-android:1.13.5") {
+        exclude(group = "org.junit.jupiter", module = "junit-jupiter-api")
+    }*/
 
 
     // Hilt
@@ -101,7 +115,6 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.common)
-
     implementation (libs.kotlin.stdlib)
 
 

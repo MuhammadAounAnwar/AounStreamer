@@ -76,8 +76,6 @@ fun DetailScreen(
                     Text(text = "Watch Video")
                 }
             }
-
-
         }
     }
 }
