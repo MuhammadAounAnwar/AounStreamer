@@ -72,6 +72,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.androidx.navigation.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.turbine)
+
 
     // Hilt
     implementation(libs.hilt.android)
@@ -87,12 +97,10 @@ dependencies {
     implementation(libs.androidx.paging.compose)
 
     implementation(libs.coil.compose)
-
-//    implementation(libs.exoplayer)
-
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.common)
+
 
 }
 

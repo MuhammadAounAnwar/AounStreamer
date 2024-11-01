@@ -126,7 +126,6 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel(), onItemSelected: (Medi
                                 }
                             }
                     }
-
                 }
             }
 
@@ -145,10 +144,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel(), onItemSelected: (Medi
                     )
                 }
             }
-
         }
-
-
     }
 }
 
