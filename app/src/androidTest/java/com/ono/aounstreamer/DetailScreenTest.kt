@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
-import com.ono.aounstreamer.presentation.DetailScreen
+import com.ono.aounstreamer.presentation.screen.DetailScreen
 import com.ono.streamerlibrary.domain.model.MediaItem
 import io.mockk.every
 import io.mockk.mockk

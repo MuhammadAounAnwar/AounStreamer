@@ -1,4 +1,4 @@
-package com.ono.aounstreamer.presentation
+package com.ono.aounstreamer.presentation.screen
 
 import android.content.pm.ActivityInfo
 import androidx.activity.ComponentActivity

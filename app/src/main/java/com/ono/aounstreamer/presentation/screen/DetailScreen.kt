@@ -1,12 +1,15 @@
-package com.ono.aounstreamer.presentation
+package com.ono.aounstreamer.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -28,21 +31,31 @@ fun DetailScreen(
     onWatchPosterClicked: (String) -> Unit,
     onWatchVideoClicked: () -> Unit
 ) {
-
-    val TAG = "DetailScreen"
     val context = LocalContext.current
 
-    val scrollState = rememberScrollState()
     viewModel.selectedItem?.let { mediaItem ->
-        Column {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500${mediaItem.posterPath}",
-                contentDescription = null,
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp) // Added padding for better spacing
+        ) {
+            // Use Box to handle image scaling better
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.3F),
-                contentScale = ContentScale.Crop
-            )
+                    .height(200.dp) // Fixed height for better control
+            ) {
+                AsyncImage(
+                    model = "https://image.tmdb.org/t/p/w500${mediaItem.posterPath}",
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize() // Fill the Box for better fit
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Title
             Text(
                 text = if (mediaItem.mediaType == "tv") mediaItem.name else mediaItem.title,
                 style = MaterialTheme.typography.headlineMedium
@@ -50,33 +63,39 @@ fun DetailScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Overview with scroll capability
+            val scrollState = rememberScrollState()
             Text(
-                modifier = Modifier.verticalScroll(scrollState),
-                text = mediaItem.overview ?: "Unknown",
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .weight(1f), // Allow it to take available space
+                text = mediaItem.overview ?: "No overview available",
                 style = MaterialTheme.typography.bodySmall
             )
+
+            // Action buttons
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(onClick = {
-                    if (mediaItem.posterPath != null) {
-                        onWatchPosterClicked.invoke(mediaItem.posterPath ?: "")
-                    } else {
+                    mediaItem.posterPath?.let {
+                        onWatchPosterClicked(it)
+                    } ?: run {
                         context.ShowToast("Poster not available")
                     }
                 }) {
                     Text(text = "Watch Poster")
                 }
 
-
-                Button(onClick = {
-                    onWatchVideoClicked.invoke()
-                }) {
+                Button(onClick = onWatchVideoClicked) {
                     Text(text = "Watch Video")
                 }
             }
         }
     }
 }
+
 
