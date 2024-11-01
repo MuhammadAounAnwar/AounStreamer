@@ -1,8 +1,10 @@
 package com.ono.aounstreamer.presentation
 
-import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
@@ -13,18 +15,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.ono.aounstreamer.MainViewModel
-import com.ono.streamerlibrary.domain.model.MediaItem
+import com.ono.aounstreamer.util.ShowToast
 
 @Composable
 fun DetailScreen(
-    viewModel: MainViewModel = hiltViewModel(), onItemSelected: (String) -> Unit
+    viewModel: MainViewModel = hiltViewModel(),
+    onWatchPosterClicked: (String) -> Unit,
+    onWatchVideoClicked: () -> Unit
 ) {
 
     val TAG = "DetailScreen"
+    val context = LocalContext.current
 
     val scrollState = rememberScrollState()
     viewModel.selectedItem?.let { mediaItem ->
@@ -34,7 +40,7 @@ fun DetailScreen(
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp),
+                    .fillMaxHeight(0.3F),
                 contentScale = ContentScale.Crop
             )
             Text(
@@ -49,11 +55,29 @@ fun DetailScreen(
                 text = mediaItem.overview ?: "Unknown",
                 style = MaterialTheme.typography.bodySmall
             )
-            Button(onClick = {
-                onItemSelected.invoke(mediaItem.posterPath ?: "")
-            }) {
-                Text(text = "Watch")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = {
+                    if (mediaItem.posterPath != null) {
+                        onWatchPosterClicked.invoke(mediaItem.posterPath ?: "")
+                    } else {
+                        context.ShowToast("Poster not available")
+                    }
+                }) {
+                    Text(text = "Watch Poster")
+                }
+
+
+                Button(onClick = {
+                    onWatchVideoClicked.invoke()
+                }) {
+                    Text(text = "Watch Video")
+                }
             }
+
+
         }
     }
 }
