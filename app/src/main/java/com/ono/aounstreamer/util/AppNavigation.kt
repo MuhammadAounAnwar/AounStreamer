@@ -17,11 +17,14 @@ import com.ono.streamerlibrary.domain.model.MediaItem
 import com.ono.streamerlibrary.domain.model.toJsonObject
 import com.ono.streamerlibrary.domain.model.toMediaItem
 
+val TAG = "AppNavigation"
+
 sealed class Screen(val route: String) {
-    object Main : Screen("main")
-    object Detail : Screen("detail_screen")
-    data class Player(val itemUrl: String) : Screen("player/$itemUrl")
+    data object Main : Screen("main")
+    data object Detail : Screen("detail_screen")
+    data object Player : Screen("player")
 }
+
 
 @Composable
 fun AppNavigation(
@@ -30,7 +33,6 @@ fun AppNavigation(
     modifier: Modifier = Modifier
 ) {
 
-    val TAG = "AppNavigation"
 
     NavHost(navController, startDestination = Screen.Main.route, modifier = modifier) {
         composable(Screen.Main.route) {
@@ -43,20 +45,20 @@ fun AppNavigation(
         composable(Screen.Detail.route) {
             viewModel.selectedItem?.let {
                 DetailScreen(viewModel) { itemUrl ->
-                    Log.d(TAG, "AppNavigation: $itemUrl")
                     navigateToPlayerScreen(navController, itemUrl)
                 }
             }
         }
 
         composable(
-            route = Screen.Player("{itemUrl}").route,
-            arguments = listOf(navArgument("itemUrl") { type = NavType.StringType })
+            route = Screen.Player.route + "/{itemUrl}",
+            arguments = listOf(navArgument("itemUrl") {
+                type = NavType.StringType
+                nullable = true
+            })
         ) { backStackEntry ->
             val itemUrl = backStackEntry.arguments?.getString("itemUrl")
-            itemUrl?.let {
-                PlayerScreen()
-            }
+            PlayerScreen()
         }
     }
 }
@@ -65,7 +67,9 @@ private fun navigateToDetailScreen(navController: NavHostController) {
     navController.navigate(Screen.Detail.route)
 }
 
-private fun navigateToPlayerScreen(navController: NavHostController, itemUrl: String) {
-    navController.navigate(Screen.Player(itemUrl).route)
+private fun navigateToPlayerScreen(navController: NavHostController, itemUrl: String?) {
+    val safeItemUrl = itemUrl?.takeIf { it.isNotEmpty() } ?: "/default_url"
+    navController.navigate(Screen.Player.route + safeItemUrl)
 }
+
 

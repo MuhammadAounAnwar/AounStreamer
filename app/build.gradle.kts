@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id ("kotlin-android")
+
 }
 
 android {
@@ -61,8 +63,6 @@ dependencies {
 
     implementation(libs.androidx.runtime)
 
-
-
     testImplementation(libs.junit)
     testImplementation(libs.androidx.core)
     androidTestImplementation(libs.androidx.junit)
@@ -101,6 +101,8 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.common)
+
+    implementation (libs.kotlin.stdlib)
 
 
 }

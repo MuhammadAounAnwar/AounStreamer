@@ -1,5 +1,6 @@
 package com.ono.aounstreamer.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,9 +21,10 @@ import com.ono.streamerlibrary.domain.model.MediaItem
 
 @Composable
 fun DetailScreen(
-    viewModel: MainViewModel = hiltViewModel(),
-    onItemSelected: (String) -> Unit
+    viewModel: MainViewModel = hiltViewModel(), onItemSelected: (String) -> Unit
 ) {
+
+    val TAG = "DetailScreen"
 
     val scrollState = rememberScrollState()
     viewModel.selectedItem?.let { mediaItem ->
@@ -47,7 +49,9 @@ fun DetailScreen(
                 text = mediaItem.overview ?: "Unknown",
                 style = MaterialTheme.typography.bodySmall
             )
-            Button(onClick = { onItemSelected.invoke(mediaItem.backdropPath ?: "") }) {
+            Button(onClick = {
+                onItemSelected.invoke(mediaItem.posterPath ?: "")
+            }) {
                 Text(text = "Watch")
             }
         }
