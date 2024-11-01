@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.map
+import androidx.paging.filter
 import com.ono.streamerlibrary.domain.model.MediaItem
 import com.ono.streamerlibrary.domain.usecase.GetMediaItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -40,4 +38,13 @@ class MainViewModel @Inject constructor(
     fun search(query: String) {
         _query.value = query
     }
+
+    fun getMediaItem(itemId: Int) =
+        mediaItems.value.filter { it.id == itemId }
+
+
+    fun getFilteredData() {
+        val items = mediaItems.value.filter { it.mediaType == "tv" }
+    }
+
 }

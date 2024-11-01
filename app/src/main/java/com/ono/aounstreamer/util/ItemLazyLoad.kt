@@ -1,4 +1,4 @@
-package com.ono.aounstreamer
+package com.ono.aounstreamer.util
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
