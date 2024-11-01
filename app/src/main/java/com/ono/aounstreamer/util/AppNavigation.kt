@@ -12,6 +12,9 @@ import com.ono.aounstreamer.MainViewModel
 import com.ono.aounstreamer.presentation.DetailScreen
 import com.ono.aounstreamer.presentation.MainScreen
 import com.ono.aounstreamer.presentation.PlayerScreen
+import com.ono.streamerlibrary.domain.model.MediaItem
+import com.ono.streamerlibrary.domain.model.toJsonObject
+import com.ono.streamerlibrary.domain.model.toMediaItem
 
 @Composable
 fun AppNavigation(
@@ -23,16 +26,15 @@ fun AppNavigation(
 
     NavHost(navController, startDestination = "main", modifier = modifier) {
         composable("main") {
-            MainScreen(viewModel) { itemId ->
-                navController.navigate("detail_screen/$itemId")
+            MainScreen(viewModel) { item ->
+                viewModel.selectedItem = item
+                navController.navigate("detail_screen")
             }
         }
 
-        composable("detail_screen/{itemId}") { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getString("itemId")
-            itemId?.let {
-                val mediaItem = viewModel.getMediaItem(itemId.toInt())
-                DetailScreen { itemUrl ->
+        composable("detail_screen") {
+            viewModel.selectedItem?.let {
+                DetailScreen(viewModel = viewModel) { itemUrl ->
                     navController.navigate("player/$itemUrl")
                 }
             }

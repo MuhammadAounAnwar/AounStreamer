@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.ono.aounstreamer.util.ErrorMessage
@@ -39,6 +40,7 @@ import com.ono.aounstreamer.util.LoadingNextPageItem
 import com.ono.aounstreamer.MainViewModel
 import com.ono.aounstreamer.util.PageLoader
 import com.ono.streamerlibrary.domain.model.MediaItem
+import java.util.HashMap
 import java.util.Locale
 
 
@@ -58,7 +60,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
 }
 
 @Composable
-fun MainScreen(viewModel: MainViewModel = hiltViewModel(), onItemSelected: (String) -> Unit) {
+fun MainScreen(viewModel: MainViewModel = hiltViewModel(), onItemSelected: (MediaItem) -> Unit) {
     var query by remember { mutableStateOf("") }
     val mediaItems = viewModel.mediaItems.collectAsLazyPagingItems()
 
@@ -162,12 +164,12 @@ fun MediaTypeHeader(mediaType: String) {
 }
 
 @Composable
-fun MediaCard(item: MediaItem, onItemSelected: (String) -> Unit) {
+fun MediaCard(item: MediaItem, onItemSelected: (MediaItem) -> Unit) {
     Card(
         modifier = Modifier
             .width(120.dp)
             .height(180.dp)
-            .clickable { onItemSelected(item.id.toString()) },
+            .clickable { onItemSelected(item) },
         shape = RoundedCornerShape(8.dp),
     ) {
         Column {
