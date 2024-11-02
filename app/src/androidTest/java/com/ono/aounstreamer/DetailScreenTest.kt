@@ -13,6 +13,9 @@ import com.ono.streamerlibrary.domain.model.MediaItem
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import jakarta.inject.Inject
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -46,34 +49,31 @@ class DetailScreenTest {
 
         // Assert
         composeTestRule.onNodeWithText("Sample Movie").assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription(null.toString())
+        composeTestRule.onNodeWithContentDescription("Media Item Poster")
             .assertIsDisplayed() // Poster image node
     }
 
     @Test
     fun detailScreen_clickWatchPoster_callsOnWatchPosterClicked() {
-        val onWatchPosterClicked = mockk<(String) -> Unit>(relaxed = true)
+        var clickedPosterPath: String? = null
         val viewModel = mockk<MainViewModel>(relaxed = true)
         every { viewModel.selectedItem } returns mediaItem
 
         composeTestRule.setContent {
             DetailScreen(
                 viewModel = viewModel,
-                onWatchPosterClicked = onWatchPosterClicked,
+                onWatchPosterClicked = { path -> clickedPosterPath = path },
                 onWatchVideoClicked = {}
             )
         }
 
-        // Act
         composeTestRule.onNodeWithText("Watch Poster").performClick()
-
-        // Assert
-        verify { onWatchPosterClicked.invoke(mediaItem.posterPath!!) }
+        assertEquals(mediaItem.posterPath, clickedPosterPath)
     }
 
     @Test
     fun detailScreen_clickWatchVideo_callsOnWatchVideoClicked() {
-        val onWatchVideoClicked = mockk<() -> Unit>(relaxed = true)
+        var wasWatchVideoClicked = false
         val viewModel = mockk<MainViewModel>(relaxed = true)
         every { viewModel.selectedItem } returns mediaItem
 
@@ -81,16 +81,16 @@ class DetailScreenTest {
             DetailScreen(
                 viewModel = viewModel,
                 onWatchPosterClicked = {},
-                onWatchVideoClicked = onWatchVideoClicked
+                onWatchVideoClicked = {
+                    wasWatchVideoClicked = true
+                }
             )
         }
 
-        // Act
         composeTestRule.onNodeWithText("Watch Video").performClick()
-
-        // Assert
-        verify { onWatchVideoClicked.invoke() }
+        assertTrue(wasWatchVideoClicked)
     }
+
 
     @Test
     fun detailScreen_noPosterPath_showsToastMessage() {
@@ -106,11 +106,7 @@ class DetailScreenTest {
             )
         }
 
-        // Act
         composeTestRule.onNodeWithText("Watch Poster").performClick()
-
-        // Assert
         composeTestRule.waitForIdle()
-        // Check for toast message if possible (Requires Toast testing setup)
     }
 }

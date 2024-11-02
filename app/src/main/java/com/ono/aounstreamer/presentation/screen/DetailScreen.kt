@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -47,7 +49,7 @@ fun DetailScreen(
             ) {
                 AsyncImage(
                     model = "https://image.tmdb.org/t/p/w500${mediaItem.posterPath}",
-                    contentDescription = null,
+                    contentDescription = "Media Item Poster",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -67,6 +69,7 @@ fun DetailScreen(
             val scrollState = rememberScrollState()
             Text(
                 modifier = Modifier
+                    .semantics { contentDescription = "Overview" }
                     .verticalScroll(scrollState)
                     .weight(1f), // Allow it to take available space
                 text = mediaItem.overview ?: "No overview available",
@@ -86,11 +89,12 @@ fun DetailScreen(
                     } ?: run {
                         context.ShowToast("Poster not available")
                     }
-                }) {
+                }, modifier = Modifier.semantics { contentDescription = "Watch Poster" }) {
                     Text(text = "Watch Poster")
                 }
 
-                Button(onClick = onWatchVideoClicked) {
+                Button(onClick = onWatchVideoClicked,
+                    modifier = Modifier.semantics { contentDescription = "Watch Video" }) {
                     Text(text = "Watch Video")
                 }
             }
