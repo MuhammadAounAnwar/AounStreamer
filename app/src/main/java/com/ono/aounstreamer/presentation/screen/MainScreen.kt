@@ -22,11 +22,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,12 +46,13 @@ fun MainScreen(
     viewModel: MainViewModel = hiltViewModel(),
     onItemSelected: (MediaItem) -> Unit
 ) {
-    val query by viewModel._query.collectAsStateWithLifecycle()
+
+    val query by viewModel.query.collectAsStateWithLifecycle()
     val mediaItems = viewModel.mediaItems.collectAsLazyPagingItems()
 
     Column {
         SearchBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "SearchBar" },
             onSearch = { viewModel.search(it) },
             onQueryChange = { viewModel.search(it) },
             placeholder = { Text("Search") },
@@ -89,7 +93,10 @@ fun NoItemsFoundMessage() {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "No items found", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = "No items found",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.semantics { contentDescription = "No Item Found" })
     }
 }
 

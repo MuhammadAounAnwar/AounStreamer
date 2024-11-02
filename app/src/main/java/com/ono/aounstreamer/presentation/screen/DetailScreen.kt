@@ -60,7 +60,8 @@ fun DetailScreen(
 
             Text(
                 text = if (mediaItem.mediaType == "tv") mediaItem.name else mediaItem.title,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.semantics { contentDescription = "Item Title" }
             )
 
             Spacer(modifier = Modifier.height(8.dp))

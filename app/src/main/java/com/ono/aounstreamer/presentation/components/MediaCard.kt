@@ -12,12 +12,15 @@ import coil.compose.AsyncImage
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.ono.streamerlibrary.domain.model.MediaItem
 
 @Composable
 fun MediaCard(item: MediaItem, onItemSelected: (MediaItem) -> Unit) {
     Card(
         modifier = Modifier
+            .semantics { contentDescription = "MediaCard" }
             .width(120.dp)
             .height(180.dp)
             .clickable { onItemSelected(item) },
@@ -38,7 +41,9 @@ fun MediaCard(item: MediaItem, onItemSelected: (MediaItem) -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .semantics { contentDescription = "Main Screen Item Title" }
             )
         }
     }

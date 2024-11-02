@@ -93,9 +93,6 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.androidx.core.testing)
     androidTestImplementation (libs.androidx.runner)
-    /*androidTestImplementation("io.mockk:mockk-android:1.13.5") {
-        exclude(group = "org.junit.jupiter", module = "junit-jupiter-api")
-    }*/
 
 
     // Hilt
